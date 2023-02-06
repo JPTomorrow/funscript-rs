@@ -21,8 +21,30 @@ pub struct SimulatorPresets {
     pub offset: String,
     pub color: String,
 }
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub struct OFSMetadata {
+    bookmarks: Vec<i32>,
+    chapters: Vec<String>,
+    creator: String,
+    description: String,
+    duration: i32,
+    license: String,
+    notes: String,
+    performers: Vec<String>,
+    #[serde(rename = "script_url")]
+    script_url: String,
+    tags: Vec<String>,
+    title: String,
+    #[serde(rename = "type")]
+    ofs_type: String,
+    #[serde(rename = "video_url")]
+    video_url: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase", default)]
 pub struct FScript {
     pub version: String,
     pub inverted: bool,
@@ -41,6 +63,46 @@ pub struct FScript {
     pub clips: Vec<Value>,
     pub actions: Vec<FSPoint>,
     pub raw_actions: Vec<FSPoint>,
+    pub metadata: OFSMetadata,
+}
+
+impl Default for FScript {
+    fn default() -> Self {
+        Self {
+            version: "".to_string(),
+            inverted: false,
+            range: -1,
+            bookmark: -1,
+            last_position: -1,
+            graph_duration: -1,
+            speed_ratio: -1.0,
+            injection_speed: -1,
+            injection_bias: -1.0,
+            scripting_mode: -1,
+            simulator_presets: Vec::new(),
+            active_simulator: -1,
+            reduction_tolerance: -1.0,
+            reduction_stretch: -1.0,
+            clips: Vec::new(),
+            actions: Vec::new(),
+            raw_actions: Vec::new(),
+            metadata: OFSMetadata {
+                bookmarks: Vec::new(),
+                chapters: Vec::new(),
+                creator: "".to_string(),
+                description: "".to_string(),
+                duration: -1,
+                license: "".to_string(),
+                notes: "".to_string(),
+                performers: Vec::new(),
+                script_url: "".to_string(),
+                tags: Vec::new(),
+                title: "".to_string(),
+                ofs_type: "".to_string(),
+                video_url: "".to_string(),
+            },
+        }
+    }
 }
 
 #[derive(Error, Debug)]
@@ -76,27 +138,28 @@ pub fn print_script(script: &FScript) {
 
 #[cfg(test)]
 mod tests {
-    use std::assert_matches::assert_matches;
-
     use super::*;
 
     #[test]
-    fn test_load_funscript() {
-        let path = "./test-scripts/joyfunscripter.funscript";
-        let s = load_funscript(path);
-        if s.is_err() {
-            assert_matches!(s, Err(FunscriptError::FileReadError(_)));
-        } else {
-            assert_matches!(s, Ok(_));
-        }
-    }
-
-    #[test]
-    fn test_save_funscript() {
+    fn test_jfs_save_load_funscript() {
         let path = "./test-scripts/joyfunscripter.funscript";
         let save_path = "./test-scripts/out/joyfunscripter.funscript";
 
         let mut s = load_funscript(path).unwrap();
+        assert!(s.last_position == 6388388382, "file has defaulted");
+        s.bookmark = 100000;
+        save_funscript(save_path, &s).unwrap();
+        let check = load_funscript(save_path).unwrap();
+        assert_eq!(check.bookmark, 100000);
+    }
+
+    #[test]
+    fn test_ofs_save_load_funscript() {
+        let path = "./test-scripts/openfunscripter.funscript";
+        let save_path = "./test-scripts/out/openfunscripter.funscript";
+
+        let mut s = load_funscript(path).unwrap();
+        assert!(s.metadata.duration == 2610, "file has defaulted");
         s.bookmark = 100000;
         save_funscript(save_path, &s).unwrap();
         let check = load_funscript(save_path).unwrap();
