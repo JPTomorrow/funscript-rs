@@ -111,6 +111,8 @@ pub enum FunscriptError {
     FileReadError(#[from] std::io::Error),
     #[error("json error {0}")]
     JsonError(#[from] SerdeError),
+    #[error("failed to {0} point at index {1}")]
+    PointError(String, usize),
 }
 
 pub fn load_funscript(path: &str) -> Result<FScript, FunscriptError> {
@@ -130,6 +132,13 @@ pub fn save_funscript(path: &str, script: &FScript) -> Result<(), FunscriptError
     let json = serde_json::to_string_pretty(script)?;
     std::fs::write(path, json)?;
     Ok(())
+}
+
+pub fn get_pt(script: &mut FScript, idx: usize) -> Result<&mut FSPoint, FunscriptError> {
+    if idx >= script.actions.len() {
+        return Err(FunscriptError::PointError("get".to_string(), idx));
+    }
+    Ok(&mut script.actions[idx])
 }
 
 pub fn print_script(script: &FScript) {
@@ -164,5 +173,15 @@ mod tests {
         save_funscript(save_path, &s).unwrap();
         let check = load_funscript(save_path).unwrap();
         assert_eq!(check.bookmark, 100000);
+    }
+
+    #[test]
+    fn test_get_set_pt() {
+        let path = "./test-scripts/openfunscripter.funscript";
+        let mut s = load_funscript(path).unwrap();
+        let pt = get_pt(&mut s, 0).unwrap();
+        assert_eq!(pt.at, 218703);
+        pt.at = 12345678;
+        assert_eq!(pt.at, 12345678);
     }
 }
