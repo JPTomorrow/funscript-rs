@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+mint = "0.5.9"
 mp4 = "0.13.0"
+native-dialog = "0.6.3"
+ramer_douglas_peucker = "0.2.2"
 serde = {version="1.0.152", features=["derive"]}
 serde_json = "1.0.92"
 thiserror = "1.0.38"

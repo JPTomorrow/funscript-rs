@@ -1,3 +1,5 @@
+use mint::Point2;
+use ramer_douglas_peucker::rdp;
 use serde::{Deserialize, Serialize};
 use serde_json::{Error as SerdeError, Value};
 use thiserror::Error;
@@ -140,9 +142,38 @@ pub fn get_pt(script: &mut FScript, idx: usize) -> Result<&mut FSPoint, Funscrip
     }
     Ok(&mut script.actions[idx])
 }
+// runs the ramer-douglas-peucker algorithm on the script
+pub fn apply_rdp(script: &mut FScript, epsilon: f64) {
+    let mut points: Vec<Point2<i32>> = Vec::new();
+    for pt in &script.actions {
+        points.push(Point2 {
+            x: pt.at,
+            y: pt.pos,
+        });
+    }
+
+    // keep points that are in idxs
+    let idxs = rdp(points.as_slice(), epsilon);
+    let mut reduced: Vec<Point2<i32>> = Vec::new();
+    for idx in idxs {
+        reduced.push(points[idx]);
+    }
+
+    script.actions.clear();
+    for pt in reduced {
+        script.actions.push(FSPoint {
+            at: pt.x,
+            pos: pt.y,
+        });
+    }
+}
 
 pub fn print_script(script: &FScript) {
     println!("{}", serde_json::to_string_pretty(script).unwrap());
+}
+
+pub fn print_script_diagnostics(s: &FScript) {
+    println!("# of points: {}", s.actions.len());
 }
 
 #[cfg(test)]
