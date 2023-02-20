@@ -1,12 +1,12 @@
 [package]
 name = "funscript-loader"
-version = "0.1.0"
+version = "0.5.0"
 edition = "2021"
-description = "A simple PNG decoder written in Rust"
+description = "A simple .funscript parser written in Rust"
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/JPTomorrow/"
-categories = ["multimedia::images"]
+repository = "https://github.com/JPTomorrow/funscript-rs"
+categories = ["parser-implementations"]
 
 [dependencies]
 mint = "0.5.9"
