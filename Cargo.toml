@@ -1,5 +1,5 @@
 [package]
-name = "funscript-loader"
+name = "funscript-rs"
 version = "0.5.0"
 edition = "2021"
 description = "A simple .funscript parser written in Rust"

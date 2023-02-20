@@ -142,6 +142,7 @@ pub fn get_pt(script: &mut FScript, idx: usize) -> Result<&mut FSPoint, Funscrip
     }
     Ok(&mut script.actions[idx])
 }
+
 // runs the ramer-douglas-peucker algorithm on the script
 pub fn apply_rdp(script: &mut FScript, epsilon: f64) {
     let mut points: Vec<Point2<i32>> = Vec::new();
