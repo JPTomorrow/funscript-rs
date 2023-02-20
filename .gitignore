@@ -1,2 +1,3 @@
 /target
 *.mp4
+/test-scripts/out/*.funscript
