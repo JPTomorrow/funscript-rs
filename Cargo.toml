@@ -1,12 +1,16 @@
 [package]
-name = "funscript-rs"
+name = "funscript"
 version = "0.5.0"
 edition = "2021"
-description = "A simple .funscript parser written in Rust"
+description = "A simple .funscript file format parser written in Rust"
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/JPTomorrow/funscript-rs"
 categories = ["parser-implementations"]
+
+[lib]
+name = "funscript"
+path = "src/funscript.rs"
 
 [dependencies]
 mint = "0.5.9"

@@ -1,7 +1,7 @@
 #![feature(assert_matches)]
 mod funscript;
 
-use funscript::*;
+use crate::funscript::*;
 use native_dialog::FileDialog;
 
 fn main() {
