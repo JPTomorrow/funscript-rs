@@ -2,10 +2,14 @@
 name = "funscript-loader"
 version = "0.1.0"
 edition = "2021"
+description = "A simple PNG decoder written in Rust"
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/JPTomorrow/"
+categories = ["multimedia::images"]
 
 [dependencies]
 mint = "0.5.9"
-mp4 = "0.13.0"
 native-dialog = "0.6.3"
 ramer_douglas_peucker = "0.2.2"
 serde = {version="1.0.152", features=["derive"]}
