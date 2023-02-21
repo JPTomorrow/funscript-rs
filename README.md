@@ -6,7 +6,6 @@ github: https://github.com/JPTomorrow discord: Kallo#9370
 
 ## ROADMAP
 - add various motion (sine wave ete.) generators to the actions
-- work on rustdocs coverage and improvements
-## COMPLETED ROADMAP
-- deserialize script data from serde into stucts instead of unstructured "Value"
-- add ability to process script with Ramer-Douglas-Peucker algorithm for point reduction while maintaining peaks and valleys in the script
+- better rustdocs
+- ~~deserialize script data from serde into stucts instead of unstructured "Value"~~
+- ~~add ability to process script with Ramer-Douglas-Peucker algorithm for point reduction while maintaining peaks and valleys in the script~~

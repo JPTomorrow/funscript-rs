@@ -1,6 +1,6 @@
 [package]
 name = "funscript"
-version = "0.5.2"
+version = "0.5.3"
 edition = "2021"
 description = "A simple .funscript file format parser written in Rust"
 readme = "README.md"
