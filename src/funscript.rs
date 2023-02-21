@@ -4,6 +4,9 @@ use serde::{Deserialize, Serialize};
 use serde_json::{Error as SerdeError, Value};
 use thiserror::Error;
 
+/// A .funscript action point
+/// x = pos
+/// y = at
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct FSPoint {
@@ -11,6 +14,8 @@ pub struct FSPoint {
     pub at: i32,
 }
 
+/// properties about a pressure simulator
+/// that can be used to input points in a .funscript
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct SimulatorPresets {
@@ -24,6 +29,7 @@ pub struct SimulatorPresets {
     pub color: String,
 }
 
+/// extra metadata, specifically for OpenFunscripter (OFS)
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct OFSMetadata {
@@ -45,6 +51,7 @@ pub struct OFSMetadata {
     video_url: String,
 }
 
+/// a serializable and deserializable .funscript file
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase", default)]
 pub struct FScript {
@@ -107,6 +114,7 @@ impl Default for FScript {
     }
 }
 
+/// Error types for .funscript file operations
 #[derive(Error, Debug)]
 pub enum FunscriptError {
     #[error("file read error {0}")]
@@ -117,12 +125,14 @@ pub enum FunscriptError {
     PointError(String, usize),
 }
 
+/// loads a .funscript file using the provided path
 pub fn load_funscript(path: &str) -> Result<FScript, FunscriptError> {
     let file = std::fs::read_to_string(path)?;
     let json = serde_json::from_str::<FScript>(&file)?;
     Ok(json)
 }
 
+/// saves a .funscript file using the provided path
 pub fn save_funscript(path: &str, script: &FScript) -> Result<(), FunscriptError> {
     if !path.ends_with(".funscript") {
         return Err(FunscriptError::FileReadError(std::io::Error::new(
@@ -136,6 +146,7 @@ pub fn save_funscript(path: &str, script: &FScript) -> Result<(), FunscriptError
     Ok(())
 }
 
+/// adds an action point
 pub fn get_pt(script: &mut FScript, idx: usize) -> Result<&mut FSPoint, FunscriptError> {
     if idx >= script.actions.len() {
         return Err(FunscriptError::PointError("get".to_string(), idx));
@@ -169,13 +180,15 @@ pub fn apply_rdp(script: &mut FScript, epsilon: f64) {
     }
 }
 
+/// print the .funscript structure
 pub fn print_script(script: &FScript) {
     println!("{}", serde_json::to_string_pretty(script).unwrap());
 }
 
-pub fn print_script_diagnostics(s: &FScript) {
-    println!("# of points: {}", s.actions.len());
-}
+// print the .funscript structure
+// fn print_script_diagnostics(s: &FScript) {
+//     println!("# of points: {}", s.actions.len());
+// }
 
 #[cfg(test)]
 mod tests {
